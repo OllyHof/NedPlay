@@ -1,4 +1,5 @@
-import time
+import math
+
 import pyniryo as bot
 import inputs as control
 
@@ -13,17 +14,49 @@ if not control.devices.gamepads:
 while control.devices.gamepads:
     events = control.get_gamepad()
     for event in events:
+
         if Quit:
             break
+
         if "ABS_" in event.code:
             if "RX" in event.code:
-                print("Right Stick L/R")
+                if event.state < 0:
+                    print("Right Stick Left", math.ceil((event.state / 32768) * 100), "%")
+                else:
+                    print("Right Stick Right", math.ceil((event.state / 32768) * 100), "%")
+
             elif "RY" in event.code:
-                print("Right Stick U/D")
+                if event.state < 0:
+                    print("Left Stick Right", math.ceil((event.state / 32768) * 100), "%")
+                else:
+                    print("Left Stick Left", math.ceil((event.state / 32768) * 100), "%")
+
             elif "X" in event.code:
-                print("Left Stick L/R")
+                if event.state == -1:
+                    print("D-Pad Left")
+                elif event.state == 1:
+                    print("D-Pad Right")
+                elif event.state == 0:
+                    ()
+                else:
+                    if event.state < 0:
+                        print("Left Stick Right", math.ceil((event.state/32768)*100), "%")
+                    else:
+                        print("Left Stick Left", math.ceil((event.state / 32768) * 100), "%")
             elif "Y" in event.code:
-                print("Left Stick U/D")
+                if event.state == 1:
+                    print("D-Pad Down")
+                elif event.state == -1:
+                    print("D-Pad Up")
+                elif event.state == 0:
+                    ()
+                else:
+                    print("Left Stick U/D", math.ceil((event.state/32768)*100), "%")
+            elif "_RZ" in event.code:
+                print("Right Trigger", math.ceil((event.state/255)*100), "%")
+            elif "_Z" in event.code:
+                print("Left Trigger", math.ceil((event.state/255)*100), "%")
+
         if "BTN" in event.code:
             if "NORTH" in event.code:
                 print("Y")
@@ -42,6 +75,7 @@ while control.devices.gamepads:
                 Quit = True
             elif "SELECT" in event.code:
                 print("START")
+
     if Quit:
         break
 
