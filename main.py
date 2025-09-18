@@ -32,10 +32,12 @@ Button_State = {
     "BTN_SELECT": 0,
     "BTN_TR": 0,
     "BTN_TL": 0,
+    "BTN_THUMBL": 0,
+    "BTN_THUMBR": 0,
 }
 D_Pad_State = {
-    "ABS_X": 0,
-    "ABS_Y": 0,
+    "ABS_HATOX": 0,
+    "ABS_HATOY": 0,
 }
 # Connecting to ro#bot
 IP = "192.168.1.10"
@@ -62,7 +64,7 @@ while control.devices.gamepads:
         #bot.move(JointsPosition(Base, Shoulder, Arm, Elbow, Wrist, Hand))
         if "ABS_" in event.code:
             if not "Z" in event.code:
-                if event.state != 1 or event.code != -1 or event.state != 0:
+                if event.code in Joystick_State :
                     Joystick_State[event.code] = math.ceil(100*event.state/32786)
                 else :
                     D_Pad_State[event.code] = event.state
@@ -72,12 +74,14 @@ while control.devices.gamepads:
 
         if "BTN" in event.code:
             Button_State[event.code] = event.state
+            if "START" in event.code:
+                Quit = True
+    for i in range(100):
+        print("")
+
     print("Joystick State: ", Joystick_State)
     print("Trigger State: ", Trigger_State)
     print("Button State: ", Button_State)
-
-
-
 
 
     if Quit:
