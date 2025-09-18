@@ -10,6 +10,33 @@ Elbow = 0
 Wrist = 0
 Hand = 0
 
+# Starting Controller Readout Sets
+Joystick_State = {
+    "ABS_RX": 0,
+    "ABS_RY": 0,
+    "ABS_X": 0,
+    "ABS_Y": 0,
+}
+
+Trigger_State = {
+    "ABS_Z": 0,
+    "ABS_RZ": 0,
+}
+
+Button_State = {
+    "BTN_NORTH": 0,
+    "BTN_SOUTH": 0,
+    "BTN_EAST": 0,
+    "BTN_WEST": 0,
+    "BTN_START": 0,
+    "BTN_SELECT": 0,
+    "BTN_TR": 0,
+    "BTN_TL": 0,
+}
+D_Pad_State = {
+    "ABS_X": 0,
+    "ABS_Y": 0,
+}
 # Connecting to ro#bot
 IP = "192.168.1.10"
 #bot = NiryoRo#bot(IP)
@@ -32,72 +59,25 @@ while control.devices.gamepads:
     for event in events:
         if Quit:
             break
-
         #bot.move(JointsPosition(Base, Shoulder, Arm, Elbow, Wrist, Hand))
-
         if "ABS_" in event.code:
-            if "RX" in event.code:
-                if event.state < 0:
-                    print("Right Stick Left", math.ceil((event.state/32768)*-100), "%")
-                else:
-                    print("Right Stick Right", math.ceil((event.state/32768)*100), "%")
-            elif "RY" in event.code:
-                if event.state > 0:
-                    print("Right Stick Up", math.ceil((event.state/32768)*100), "%")
-                else:
-                    print("Right Stick Down", math.ceil((event.state/32768)*-100), "%")
+            if not "Z" in event.code:
+                if event.state != 1 or event.code != -1 or event.state != 0:
+                    Joystick_State[event.code] = math.ceil(100*event.state/32786)
+                else :
+                    D_Pad_State[event.code] = event.state
 
-            elif "X" in event.code:
-                if event.state == -1:
-                    print("D-Pad Left")
-                elif event.state == 1:
-                    print("D-Pad Right")
-                elif event.state == 0:
-                    print("D-Pad Off")
-                else:
-                    if event.state > 0:
-                        print("Left Stick Right", math.ceil((event.state/32768)*100), "%")
-                    else:
-                        print("Left Stick Left", math.ceil((event.state/32768)*-100), "%")
-
-            elif "Y" in event.code:
-                if event.state == 1:
-                    print("D-Pad Down")
-                elif event.state == -1:
-                    print("D-Pad Up")
-                elif event.state == 0:
-                    print("D-Pad Off")
-                else:
-                    if event.state > 0:
-                        print("Left Stick Up", math.ceil((event.state/32768)*100), "%")
-                    else:
-                        print("Left Stick Down", math.ceil((event.state/32768)*-100), "%")
-
-            elif "_RZ" in event.code:
-                print("Right Trigger", math.ceil((event.state/255)*100), "%")
-
-            elif "_Z" in event.code:
-                print("Left Trigger", math.ceil((event.state/255)*100), "%")
+            elif "Z" in event.code:
+                Trigger_State[event.code] = math.ceil(100*event.state/255)
 
         if "BTN" in event.code:
-            if event.state == 1:
-                if "NORTH" in event.code:
-                    print("Y")
-                elif "SOUTH" in event.code:
-                    print("A")
-                elif "WEST" in event.code:
-                    print("X")
-                elif "EAST" in event.code:
-                    print("B")
-                elif "TL" in event.code:
-                    print("LB")
-                elif "TR" in event.code:
-                    print("RB")
-                elif "START" in event.code:
-                    print("BACK")
-                    Quit = True
-                elif "SELECT" in event.code:
-                    print("START")
+            Button_State[event.code] = event.state
+    print("Joystick State: ", Joystick_State)
+    print("Trigger State: ", Trigger_State)
+    print("Button State: ", Button_State)
+
+
+
 
 
     if Quit:
