@@ -1,28 +1,39 @@
 import math
-
-import pyniryo
 import inputs as control
-from pyniryo import NiryoRobot
+from pyniryo import NiryoRobot, JointsPosition
 
+# Setting Startup joint positions
+Base = 0
+Shoulder = 0
+Arm = 0
+Elbow = 0
+Wrist = 0
+Hand = 0
+
+# Connecting to ro#bot
 IP = "192.168.1.10"
-bot = NiryoRobot(IP)
+#bot = NiryoRo#bot(IP)
+#bot.calibrate_auto()
+#bot.update_tool()
 
-bot.calibrate_auto()
-bot.update_tool()
+# 
 Quit = False
 
+#Printing Found Gamepads
 for device in control.devices.gamepads:
     print(device)
-
+#Printing Not found Gamepads
 if not control.devices.gamepads:
     print("No gamepad devices found")
 
+#Main
 while control.devices.gamepads:
     events = control.get_gamepad()
     for event in events:
-
         if Quit:
             break
+
+        #bot.move(JointsPosition(Base, Shoulder, Arm, Elbow, Wrist, Hand))
 
         if "ABS_" in event.code:
             if "RX" in event.code:
@@ -30,7 +41,6 @@ while control.devices.gamepads:
                     print("Right Stick Left", math.ceil((event.state/32768)*-100), "%")
                 else:
                     print("Right Stick Right", math.ceil((event.state/32768)*100), "%")
-
             elif "RY" in event.code:
                 if event.state > 0:
                     print("Right Stick Up", math.ceil((event.state/32768)*100), "%")
@@ -43,7 +53,7 @@ while control.devices.gamepads:
                 elif event.state == 1:
                     print("D-Pad Right")
                 elif event.state == 0:
-                    ()
+                    print("D-Pad Off")
                 else:
                     if event.state > 0:
                         print("Left Stick Right", math.ceil((event.state/32768)*100), "%")
@@ -56,7 +66,7 @@ while control.devices.gamepads:
                 elif event.state == -1:
                     print("D-Pad Up")
                 elif event.state == 0:
-                    ()
+                    print("D-Pad Off")
                 else:
                     if event.state > 0:
                         print("Left Stick Up", math.ceil((event.state/32768)*100), "%")
@@ -89,10 +99,11 @@ while control.devices.gamepads:
                 elif "SELECT" in event.code:
                     print("START")
 
+
     if Quit:
         break
 
-bot.close_connection()
+#bot.close_connection()
 
 
 
