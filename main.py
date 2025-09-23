@@ -144,19 +144,15 @@ while control.devices.gamepads:
     # Update joint values based on joystick/trigger input
     #Base
     Base = update_Joint(Joystick_State["ABS_RX"], Base, -2.96, 2.96)
-
     #Shoulder
     Shoulder = update_Joint(-Joystick_State["ABS_RY"], Shoulder, -2.09, 0.61)
-
     #Arm
     Arm = update_Joint(Joystick_State["ABS_Y"], Arm, -1.34, 1.57)
-
     #Elbow
     Elbow = update_Joint(Joystick_State["ABS_X"], Elbow, -2.09, 2.09)
-
     #Wrist
-    Wrist = update_Joint(Trigger_State["ABS_Z"], Wrist, -10.34, 1.57)
-    Wrist = update_Joint(-Trigger_State["ABS_RZ"], Wrist, -10.34, 1.57)
+    Wrist = update_Joint(Trigger_State["ABS_Z"], Wrist, -1.92, 1.57)
+    Wrist = update_Joint(-Trigger_State["ABS_RZ"], Wrist, -1.92, 1.57)
 
 
     # Gripper control using bumpers
@@ -176,9 +172,9 @@ while control.devices.gamepads:
     if Button_State["BTN_SOUTH"] == 1 and prev_button_state["BTN_SOUTH"] == 0:
         Hand = Hand/2
     if Button_State["BTN_EAST"] == 1:
-        Hand = 2.53
+        Hand = math.pi/2
     if Button_State["BTN_WEST"] == 1:
-        Hand = -2.53
+        Hand = math.pi/2
 
 
     if Quit:
